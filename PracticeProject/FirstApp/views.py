@@ -2,8 +2,15 @@ from django.shortcuts import render, HttpResponse, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework import generics
 from FirstApp.models import Author, Book
 from FirstApp.serializers import BookSerializer, AuthorSerializer
+# Correct import statement for DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+
+from FirstApp.filters import BookFilter 
+
 # Create your views here.
 def home(request):
     html = "<html><body><h1>Hello welcome user!</h1></body></html>"
@@ -14,6 +21,8 @@ class AuthorList(APIView):
     def get(self, request):
         authors = Author.objects.all()
         serializer = AuthorSerializer(authors, many=True)
+        filter_backends = [DjangoFilterBackend]
+        filterset_fields = ['name']
         return Response(serializer.data)
     
     def post(self, request):
@@ -76,3 +85,9 @@ class BookDetail(APIView):
         book = self.get_object(book_id)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class BookListCreateView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BookFilter 
