@@ -3,13 +3,13 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework import generics
-from FirstApp.models import Author, Book
-from FirstApp.serializers import BookSerializer, AuthorSerializer
+from FirstApp.models import Author, Book, MasterData
+from FirstApp.serializers import BookSerializer, AuthorSerializer, MasterDataSerializer
 # Correct import statement for DjangoFilterBackend
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
-from FirstApp.filters import BookFilter 
+from FirstApp.filters import BookFilter, AuthorFilter
 
 # Create your views here.
 def home(request):
@@ -91,3 +91,17 @@ class BookListCreateView(generics.ListCreateAPIView):
     serializer_class = BookSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = BookFilter 
+
+class AuthorListCreateView(generics.ListCreateAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    filter_backends=[DjangoFilterBackend]
+    filterset_class = AuthorFilter
+
+class MasterDataCreateView(generics.ListCreateAPIView):
+    queryset = MasterData.objects.all()
+    serializer_class = MasterDataSerializer
+
+class MasterDataDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = MasterData.objects.all()
+    serializer_class = MasterDataSerializer

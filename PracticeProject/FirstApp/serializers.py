@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from FirstApp.models import Author, Book
+from FirstApp.models import Author, Book, MasterData
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,4 +11,11 @@ class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+
+class MasterDataSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
+    author = AuthorSerializer()
+    class Meta:
+        model = MasterData
+        fields = ['id', 'author', 'book', 'created_date']
 

@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 
 class Author(models.Model):
     author_id = models.AutoField(primary_key=True)
@@ -18,6 +20,14 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+class MasterData(models.Model):
+    master_data_id = models.AutoField(primary_key=True)
+    author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    date_created =  models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f"{self.author.name} - {self.book.title} - {self.created_date}"
 
 class Address(models.Model):
     address_id = models.AutoField(primary_key=True)
